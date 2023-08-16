@@ -33,20 +33,18 @@ class DataExtractor:
         return df
 
     # step 2 task4
-    #def retrieve_pdf_data(self, link):
-        #df = pd.read_csv('card_details.pdf',pages='all')
-        #dfs = tabula.read_pdf('card_details.pdf',pages='all')
-        #return dfs
+    def retrieve_pdf_data(self, link):
+    
+        card_df = tabula.read_pdf('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf',pages='all')
+        df = pd.concat(card_df)
+        return df
 
-
-       
-    #def list_number_of_stores():
-
-    #def retrieve_stores_data ():   
 if __name__== "__main__":
     instance = DatabaseConnector()
     data_extraction = DataExtractor()
+
     data_extraction.read_rds_tables(instance,'legacy_users')
+    data_extraction.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
 
 
 
