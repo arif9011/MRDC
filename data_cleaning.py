@@ -12,6 +12,15 @@ from sqlalchemy import create_engine
 class DataCleaning:
        #Step 6 task3
     def clean_user_data(self,user_df):
+        """
+        Performs the cleaning of the user data for NULL values, errors with dates, incorrectly
+        typed values and rows filled with the wrong information.
+            Parameters:
+                A pandas dataframe
+            Returns:
+                The same dataframe, but cleaned.
+
+        """
         
         # The dataframe with the null values replaced with NaN .
         
@@ -20,7 +29,7 @@ class DataCleaning:
         user_df[['first_name', 'last_name']] = user_df[['first_name', 'last_name']].replace('[^a-zA-Z-]', np.nan, regex=True)
        
         #Drop row with duplicated
-        user_df.drop_duplicates()
+        user_df=user_df.drop_duplicates()
         # Removing rows with no user_uuid
         user_df = user_df[user_df['user_uuid'] != 'NULL']
         # drop the rows containing NaNs
@@ -33,8 +42,7 @@ class DataCleaning:
         user_df['join_date'] = pd.to_datetime(user_df['join_date'], infer_datetime_format=True, errors = 'coerce')
         # check the  incorrect dates for join date
         user_df = user_df[user_df['join_date'].notna()]
-        # check any null value
-        user_df.isnull().sum()
+        
         #Drop the null value
         user_df=user_df.dropna()
         # sort out some wrong country code entries for UK
@@ -48,6 +56,15 @@ class DataCleaning:
     
     # task 4 step 3
     def clean_card_data(self,card_df):
+        """
+        Performs the cleaning of the card data.
+        Removes any erroneous values, NULL values or errors with formatting.
+
+            Parameters: a pandas dataframe
+
+            Returns: a pandas dataframe
+
+        """
         #remove null value for each column
         card_df=card_df.dropna()
         # remove some wrong entries by removing the lines with wrong card provides
@@ -68,6 +85,46 @@ class DataCleaning:
         card_df['expiry_date'] =  pd.to_datetime(card_df['expiry_date'], infer_datetime_format=True, errors = 'coerce')
         card_df = card_df.reset_index(drop=True)
         return card_df
+    
+    #step 4 task5
+
+    def called_clean_store_data(self, store_df):
+        """
+        Performs the cleaning of the stores data.
+        Removes any erroneous values, NULL values or errors with formatting.
+
+            Parameters: a pandas dataframe
+
+            Returns: a pandas dataframe
+        """
+        
+        # drop specific rows with NaN
+        store_df = store_df[~store_df['country_code'].isna()]
+        list_of_values = ['GB', 'US', 'DE']
+        # remap continent errors
+        mapping = {'eeEurope': 'Europe', 'eeAmerica': 'America'}
+        store_df['continent'] = store_df['continent'].replace(mapping)
+        # drop rows with wrong country codes
+        store_df = store_df[store_df['country_code'].str.contains('|'.join(list_of_values))]
+        #converts the opening_date column to a datetime object
+        store_df['opening_date'] = pd.to_datetime(store_df['opening_date'], infer_datetime_format=True, errors = 'coerce')
+        # drop a lat column 
+        store_df.drop(columns = ['lat', 'index'], inplace = True)
+        # convert the latitude column to float and remove negative values
+        store_df['latitude'] = store_df['latitude'].astype('float').abs()
+        # remap staff_numbers column errors
+        mapping = {'J78': '78', '30e': '30','80R': '80','A97': '97', '3n9':'39'}
+        store_df['staff_numbers'] = store_df['staff_numbers'].replace(mapping)
+        # convert staff numbers to integer
+        store_df['staff_numbers'] = store_df['staff_numbers'].astype('int64')
+        #converts the store_type to category
+        store_df['store_type'] = store_df['store_type'].astype('category')
+        #converts the country code to category
+        store_df['country_code'] = store_df['country_code'].astype('category')
+        store_df = store_df.reset_index(drop=True)
+        
+
+        return store_df
  
 
   
@@ -81,7 +138,13 @@ clean_user_df=data_cleaning.clean_user_data(user_df)
 card_df=data_extractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
 print(card_df)
 clean_card_df=data_cleaning.clean_card_data(card_df)
+store_df=data_extractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
+print(store_df)
+clean_store_df=data_cleaning.called_clean_store_data( store_df)
+
 #clean_user_df.to_csv('clean_user_df13.csv')
+clean_store_df.to_csv('clean_store_after.csv')
+
 
 
 

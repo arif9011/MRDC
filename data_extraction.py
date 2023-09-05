@@ -1,8 +1,10 @@
 import tabula
 import pandas as pd
 from sqlalchemy import inspect
-from tabula.io import read_pdf
+
 from database_utils import DatabaseConnector
+import requests
+import json
 class DataExtractor:   
     """
     Defines methods that help extract data from different data sources such as
@@ -38,6 +40,25 @@ class DataExtractor:
         card_df = tabula.read_pdf('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf',pages='all')
         df = pd.concat(card_df)
         return df
+    #step 1 and step2 task5
+    def list_number_of_stores(self,header_dictionary):
+        endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
+        header_dictionary = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+       
+        response = requests.get(endpoint, headers=header_dictionary)
+        return response.json()['number_stores']
+    
+        # step 3 task5
+    def retrieve_stores_data(self, header_dictionary ):
+
+        header_dictionary = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+        store_number   = self.list_number_of_stores(header_dictionary)
+        stores_list = []
+        for i in range(store_number):
+            endpoint = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{i}'
+            response = requests.get(endpoint, headers=header_dictionary)
+            stores_list.append( pd.json_normalize(response.json()))
+        return pd.concat(stores_list)
 
 if __name__== "__main__":
     instance = DatabaseConnector()
@@ -45,6 +66,8 @@ if __name__== "__main__":
 
     data_extraction.read_rds_tables(instance,'legacy_users')
     data_extraction.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
+    #data_extraction.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
+    data_extraction.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
 
 
 
