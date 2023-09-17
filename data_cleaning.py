@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import datetime
 import tabula
+import boto3
 
 from data_extraction import DataExtractor
 from database_utils import DatabaseConnector
@@ -101,18 +102,20 @@ class DataCleaning:
         # drop specific rows with NaN
         store_df = store_df[~store_df['country_code'].isna()]
         list_of_values = ['GB', 'US', 'DE']
+         # drop rows with wrong country codes
+        store_df = store_df[store_df['country_code'].str.contains('|'.join(list_of_values))]
         # remap continent errors
         mapping = {'eeEurope': 'Europe', 'eeAmerica': 'America'}
         store_df['continent'] = store_df['continent'].replace(mapping)
-        # drop rows with wrong country codes
-        store_df = store_df[store_df['country_code'].str.contains('|'.join(list_of_values))]
+       
         #converts the opening_date column to a datetime object
         store_df['opening_date'] = pd.to_datetime(store_df['opening_date'], infer_datetime_format=True, errors = 'coerce')
         # drop a lat column 
         store_df.drop(columns = ['lat', 'index'], inplace = True)
         # convert the latitude column to float and remove negative values
         store_df['latitude'] = store_df['latitude'].astype('float').abs()
-        # remap staff_numbers column errors
+        
+        # replace staff_numbers column errors
         mapping = {'J78': '78', '30e': '30','80R': '80','A97': '97', '3n9':'39'}
         store_df['staff_numbers'] = store_df['staff_numbers'].replace(mapping)
         # convert staff numbers to integer
@@ -123,11 +126,91 @@ class DataCleaning:
         store_df['country_code'] = store_df['country_code'].astype('category')
         store_df = store_df.reset_index(drop=True)
         
-
         return store_df
- 
+    
+    def convert_product_weights(self,x):
+        """
+        Converts the weight column entries from various units to kg
+        For those products with multiple items, calculates the total weight by multipling the 
+        item weight x the number of itmes
 
-  
+           Parameters:
+                a dataframe containing product data from the product.csv file downloaded from the s3 datalink
+
+            Returns:
+                the same database clean from existing errors
+
+        """
+        if 'kg' in x:
+            x = x.replace('kg', '')
+            x = float(x)
+
+        elif 'ml' in x:
+            x = x.replace('ml', '')
+            x = float(x)/1000
+
+        elif 'g' in x:
+            x = x.replace('g', '')
+            x = float(x)/1000
+
+        elif 'lb' in x:
+            x = x.replace('lb', '')
+            x = float(x)*0.453591
+
+        elif 'oz' in x:
+            x = x.replace('oz', '')
+            x = float(x)*0.0283495
+           
+        return x
+        
+    def clean_products_data(self, product_df):
+        """
+        Performs various cleaning actions on the product database
+
+            Parameters:
+                a dataframe containing product data from the product.csv file downloaded from the s3 datalake
+
+            Returns:
+                the same database clean from existing errors
+        """
+        # replace null values
+        product_df.replace('NULL', np.NaN, inplace=True)
+        # convert data_added coloum to data formate
+        product_df['date_added'] = pd.to_datetime(product_df['date_added'], errors ='coerce')
+        #drop null values from date_added column
+        product_df.dropna(subset=['date_added'], how='any', axis=0, inplace=True)
+        #replace empty values for weight column
+        product_df['weight'] = product_df['weight'].apply(lambda x: x.replace(' .', ''))
+        
+        # splits the weight column into  temp columns split by the 'x'
+        temp_cols = product_df.loc[product_df.weight.str.contains('x'), 'weight'].str.split('x', expand=True) 
+        # Extracts the numeric values from the temp columns 
+        numeric_cols = temp_cols.apply(lambda x: pd.to_numeric(x.str.extract('(\d+\.?\d*)', expand=False)), axis=1) 
+        # Gets the product of the 2 numeric values
+        final_weight = numeric_cols.product(axis=1) 
+        product_df.loc[product_df.weight.str.contains('x'), 'weight'] = final_weight
+        # converts weight column to string
+        product_df['weight'] = product_df['weight'].apply(lambda x: str(x).lower().strip())
+        #calling convert product weight function
+        product_df['weight'] = product_df['weight'].apply(lambda x: self.convert_product_weights(x))
+        # converts weight column to float
+        product_df['weight'] = product_df['weight'].astype('float')
+        # replace product price to £
+    
+        product_df['product_price'] = product_df['product_price'].str.replace('£', '')
+        #convert product_price column to float
+        product_df['product_price'] = product_df['product_price'].astype('float')
+        # converts catagory column to category
+        product_df['category'] = product_df['category'].astype('category')
+        #converts remmoved column to catagory
+        product_df['removed'] = product_df['removed'].astype('category')
+        #rename weight and product price column
+        product_df.rename(columns={'weight': 'weight_kg', 'product_price': 'price_price_£'}, inplace=True)
+        # remove Unnamed column
+        product_df.drop('Unnamed: 0', axis=1, inplace=True)
+        product_df = product_df.reset_index(drop=True)
+        return product_df
+    
 data_cleaning = DataCleaning()
 data_extractor=DataExtractor()
 db_connector= DatabaseConnector()
@@ -141,9 +224,14 @@ clean_card_df=data_cleaning.clean_card_data(card_df)
 store_df=data_extractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
 print(store_df)
 clean_store_df=data_cleaning.called_clean_store_data( store_df)
+product_df = data_extractor.extract_from_s3('s3://data-handling-public/products.csv')
+print(product_df)
+clean_product_df = data_cleaning.clean_products_data(product_df)
+#print(clean_store_df)
+#clean_user_df.to_csv('clean_user_after.csv')
+#clean_store_df.to_csv('clean_store_after.csv')
+clean_product_df.to_csv('clean_product_data.csv')
 
-#clean_user_df.to_csv('clean_user_df13.csv')
-clean_store_df.to_csv('clean_store_after.csv')
 
 
 

@@ -5,6 +5,7 @@ from sqlalchemy import inspect
 from database_utils import DatabaseConnector
 import requests
 import json
+import boto3
 class DataExtractor:   
     """
     Defines methods that help extract data from different data sources such as
@@ -59,6 +60,24 @@ class DataExtractor:
             response = requests.get(endpoint, headers=header_dictionary)
             stores_list.append( pd.json_normalize(response.json()))
         return pd.concat(stores_list)
+    
+    def extract_from_s3(self,address):
+        '''This function takes in a string that is the address of a csv file in an S3 bucket, and returns a
+        pandas dataframe of the csv file
+        
+        Parameters
+        ----------
+        address
+            the address of the file you want to extract
+        
+        Returns
+        -------
+            A dataframe
+        '''
+        client = boto3.client('s3')
+        df = pd.read_csv(address)
+        
+        return df
 
 if __name__== "__main__":
     instance = DatabaseConnector()
