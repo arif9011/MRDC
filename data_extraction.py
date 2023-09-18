@@ -87,6 +87,7 @@ if __name__== "__main__":
     data_extraction.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
     #data_extraction.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
     data_extraction.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
+    data_extraction.extract_from_s3('s3://data-handling-public/products.csv')
 
 
 

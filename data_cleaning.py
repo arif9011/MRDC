@@ -175,6 +175,9 @@ class DataCleaning:
         """
         # replace null values
         product_df.replace('NULL', np.NaN, inplace=True)
+        #replaces values with entries with correct ones
+        product_df.replace({'weight':['12 x 100g', '8 x 150g', '6 x 412g', '6 x 400g']}, 
+                  {'weight':['1200g', '1200g', '2472', '2400']}, inplace=True)
         # convert data_added coloum to data formate
         product_df['date_added'] = pd.to_datetime(product_df['date_added'], errors ='coerce')
         #drop null values from date_added column
@@ -182,30 +185,29 @@ class DataCleaning:
         #replace empty values for weight column
         product_df['weight'] = product_df['weight'].apply(lambda x: x.replace(' .', ''))
         
-        # splits the weight column into  temp columns split by the 'x'
-        temp_cols = product_df.loc[product_df.weight.str.contains('x'), 'weight'].str.split('x', expand=True) 
+        # splits the weight column into  two new columns split by the 'x'
+        new_column = product_df.loc[product_df.weight.str.contains('x'), 'weight'].str.split('x', expand=True) 
         # Extracts the numeric values from the temp columns 
-        numeric_cols = temp_cols.apply(lambda x: pd.to_numeric(x.str.extract('(\d+\.?\d*)', expand=False)), axis=1) 
-        # Gets the product of the 2 numeric values
-        final_weight = numeric_cols.product(axis=1) 
+        numeric_column = new_column.apply(lambda x: pd.to_numeric(x.str.extract('(\d+\.?\d*)', expand=False)), axis=1) 
+        # Gets the product of the two numeric values
+        final_weight = numeric_column.product(axis=1) 
         product_df.loc[product_df.weight.str.contains('x'), 'weight'] = final_weight
-        # converts weight column to string
+        # replace any non-strings value from weight column.
         product_df['weight'] = product_df['weight'].apply(lambda x: str(x).lower().strip())
         #calling convert product weight function
         product_df['weight'] = product_df['weight'].apply(lambda x: self.convert_product_weights(x))
         # converts weight column to float
         product_df['weight'] = product_df['weight'].astype('float')
         # replace product price to £
-    
         product_df['product_price'] = product_df['product_price'].str.replace('£', '')
         #convert product_price column to float
         product_df['product_price'] = product_df['product_price'].astype('float')
-        # converts catagory column to category
+        # converts category column to category
         product_df['category'] = product_df['category'].astype('category')
         #converts remmoved column to catagory
         product_df['removed'] = product_df['removed'].astype('category')
         #rename weight and product price column
-        product_df.rename(columns={'weight': 'weight_kg', 'product_price': 'price_price_£'}, inplace=True)
+        product_df.rename(columns={'weight': 'weight_kg', 'product_price': 'product_price_£'}, inplace=True)
         # remove Unnamed column
         product_df.drop('Unnamed: 0', axis=1, inplace=True)
         product_df = product_df.reset_index(drop=True)
@@ -227,10 +229,11 @@ clean_store_df=data_cleaning.called_clean_store_data( store_df)
 product_df = data_extractor.extract_from_s3('s3://data-handling-public/products.csv')
 print(product_df)
 clean_product_df = data_cleaning.clean_products_data(product_df)
+#print(clean_product_df)
 #print(clean_store_df)
 #clean_user_df.to_csv('clean_user_after.csv')
 #clean_store_df.to_csv('clean_store_after.csv')
-clean_product_df.to_csv('clean_product_data.csv')
+#clean_product_df.to_csv('clean_product_df_data.csv')
 
 
 
