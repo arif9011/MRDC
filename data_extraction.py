@@ -11,7 +11,7 @@ class DataExtractor:
     Defines methods that help extract data from different data sources such as
     CSV files, an API and an S3 bucket.
     """
-    # Step 5 task3
+    # task3 step5
 
     def read_rds_tables(self,engine,table_name):
 
@@ -35,7 +35,7 @@ class DataExtractor:
         
         return df
 
-    # step 2 task4
+    # task4 step2
     def retrieve_pdf_data(self, link):
     
         card_df = tabula.read_pdf('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf',pages='all')
@@ -49,7 +49,7 @@ class DataExtractor:
         response = requests.get(endpoint, headers=header_dictionary)
         return response.json()['number_stores']
     
-        # step 3 task5
+        # task5 step3
     def retrieve_stores_data(self, header_dictionary ):
 
         header_dictionary = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
@@ -60,7 +60,7 @@ class DataExtractor:
             response = requests.get(endpoint, headers=header_dictionary)
             stores_list.append( pd.json_normalize(response.json()))
         return pd.concat(stores_list)
-    
+    #task6 step1
     def extract_from_s3(self,address):
         '''This function takes in a string that is the address of a csv file in an S3 bucket, and returns a
         pandas dataframe of the csv file
@@ -78,6 +78,26 @@ class DataExtractor:
         df = pd.read_csv(address)
         
         return df
+    #task 8 
+    def extract_from_s3_json(self, link):
+        
+        '''It takes a link as an input, makes a request to that link, and returns a dataframe of the json data.
+        
+        Parameters
+        ----------
+        link
+            the link to the API
+        
+        Returns
+        -------
+            A dataframe
+        '''
+        
+        response = requests.get(link)
+        data = response.json()
+        df = pd.DataFrame.from_dict(data)
+        
+        return df
 
 if __name__== "__main__":
     instance = DatabaseConnector()
@@ -88,6 +108,7 @@ if __name__== "__main__":
     #data_extraction.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
     data_extraction.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
     data_extraction.extract_from_s3('s3://data-handling-public/products.csv')
+    data_extraction.extract_from_s3_json('https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json')
 
 
 

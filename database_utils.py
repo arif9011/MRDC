@@ -3,14 +3,14 @@ from sqlalchemy import create_engine
 from sqlalchemy import inspect
 import pandas as pd
 class DatabaseConnector:
-    #step 2 task3
+    # task3 step2
     def read_db_creds(self):
        with open('db_creds.yaml', 'r') as db_creds_file:
             db_creds = yaml.safe_load(db_creds_file)
             #print(db_creds)
             return db_creds
 
-     #Step 3 task3
+     #task3 step3
     def init_db_engine(self):
         db_creds = self.read_db_creds()
         engine = create_engine(f"postgresql://{db_creds['RDS_USER']}:{db_creds['RDS_PASSWORD']}@{db_creds['RDS_HOST']}:{db_creds['RDS_PORT']}/{db_creds['RDS_DATABASE']}")
@@ -18,14 +18,14 @@ class DatabaseConnector:
         return engine.connect()
     
     
-    #Step 4 task3
+    #task3 step4
     def list_db_tables(self):
         engine = self.init_db_engine()
         inspector = inspect(engine)
         return inspector.get_table_names()
         
        
-    # step 7 task3
+    # task3 step7
     def upload_to_db(self, DataFrame, table_name):    
        db_creds = self.read_db_creds() 
        engine = create_engine(f"postgresql://{db_creds['USER']}:{db_creds['PASSWORD']}@{db_creds['HOST']}:{db_creds['PORT']}/{db_creds['DATABASE']}")

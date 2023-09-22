@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 
 
 class DataCleaning:
-       #Step 6 task3
+       #task3 step 6
     def clean_user_data(self,user_df):
         """
         Performs the cleaning of the user data for NULL values, errors with dates, incorrectly
@@ -19,7 +19,7 @@ class DataCleaning:
             Parameters:
                 A pandas dataframe
             Returns:
-                The same dataframe, but cleaned.
+                The cleaned dataframe.
 
         """
         
@@ -87,7 +87,7 @@ class DataCleaning:
         card_df = card_df.reset_index(drop=True)
         return card_df
     
-    #step 4 task5
+    #task5 step 4
 
     def called_clean_store_data(self, store_df):
         """
@@ -127,7 +127,7 @@ class DataCleaning:
         store_df = store_df.reset_index(drop=True)
         
         return store_df
-    
+      # task 6 step 2
     def convert_product_weights(self,x):
         """
         Converts the weight column entries from various units to kg
@@ -162,7 +162,7 @@ class DataCleaning:
             x = float(x)*0.0283495
            
         return x
-        
+        #task 6 step 3
     def clean_products_data(self, product_df):
         """
         Performs various cleaning actions on the product database
@@ -212,6 +212,46 @@ class DataCleaning:
         product_df.drop('Unnamed: 0', axis=1, inplace=True)
         product_df = product_df.reset_index(drop=True)
         return product_df
+    #task 7 step 3
+    def clean_orders_data(self,order_df):
+        """
+        Cleans the orders_data downloaded from the AWS RDS server
+            Parameters:
+                A pandas dataframe
+
+            Results:
+                A pandas dataframe
+        """
+
+        order_df.drop(['first_name', 'last_name', '1'], axis = 1, inplace = True)
+        return order_df
+    #  #task 8 
+    def date_times_data(self,date_times_df):
+        # The dataframe with the null values replaced with NaN .
+        
+        date_times_df=date_times_df.replace('NULL',np.nan)
+         # removes null from time period column 
+        date_times_df = date_times_df[~date_times_df['time_period'].isnull()]
+         # removes other erroneous values
+        list_of_values = ['Evening', 'Midday', 'Morning', 'Late_Hours']
+        date_times_df = date_times_df[date_times_df['time_period'].str.contains('|'.join(list_of_values))]
+        # removes NaN from date column 
+        date_times_df = date_times_df[~pd.to_numeric(date_times_df['month'], errors='coerce').isna()]
+        #drops any row which contain null values in the date_uuid column
+        date_times_df.dropna(subset=['date_uuid'], inplace=True)
+        #drops any row which contain null values in the following columns
+        date_times_df.dropna(subset=['day', 'year', 'month'], inplace=True)
+        # converts time stamp column to date time  add year, month and days with time stamp column
+        date_times_df['timestamp'] = pd.to_datetime(date_times_df['year'].astype(str) 
+                                                   + '-'+ date_times_df['month'].astype(str) + '-' 
+                                                   + date_times_df['day'].astype(str) + ' ' + date_times_df['timestamp'])
+        
+        # converts time period column to category
+        date_times_df['time_period'] = date_times_df['time_period'].astype('category')
+        date_times_df = date_times_df.reset_index(drop=True)
+        
+        return date_times_df
+        
     
 data_cleaning = DataCleaning()
 data_extractor=DataExtractor()
@@ -229,11 +269,22 @@ clean_store_df=data_cleaning.called_clean_store_data( store_df)
 product_df = data_extractor.extract_from_s3('s3://data-handling-public/products.csv')
 print(product_df)
 clean_product_df = data_cleaning.clean_products_data(product_df)
+order_df = data_extractor.read_rds_tables(engine, 'orders_table')
+print(order_df)
+clean_order_df = data_cleaning.clean_orders_data(order_df)
+date_times_df=data_extractor.extract_from_s3_json('https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json')
+print(date_times_df)
+clean_date_times_df=data_cleaning.date_times_data(date_times_df)
+print(clean_date_times_df)
+                                                 
 #print(clean_product_df)
 #print(clean_store_df)
 #clean_user_df.to_csv('clean_user_after.csv')
 #clean_store_df.to_csv('clean_store_after.csv')
 #clean_product_df.to_csv('clean_product_df_data.csv')
+#clean_order_df.to_csv('clean_order_df.csv')
+#clean_date_times_df.to_json('clean_date_times.json')
+
 
 
 
