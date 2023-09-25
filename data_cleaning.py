@@ -55,6 +55,7 @@ class DataCleaning:
         user_df = user_df.reset_index(drop=True)          
         return user_df
     
+    
     # task 4 step 3
     def clean_card_data(self,card_df):
         """
@@ -66,14 +67,17 @@ class DataCleaning:
             Returns: a pandas dataframe
 
         """
-        #remove null value for each column
-        card_df=card_df.dropna()
+        # remove some NULL entries
+        card_df.replace('NULL', np.nan, inplace=True)
+        
+        card_df[card_df['card_number']!='NULL']
         # remove some wrong entries by removing the lines with wrong card provides
         card_df = card_df[card_df['card_provider'].isin(['Diners Club / Carte Blanche', 'American Express', 'JCB 16 digit',
         'JCB 15 digit', 'Maestro', 'Mastercard', 'Discover',
         'VISA 19 digit', 'VISA 16 digit', 'VISA 13 digit'])]
         # Removes ? question marks from card numbers
         card_df['card_number'] = card_df['card_number'].apply(lambda x: re.sub(r'^\?+', '', x) if isinstance(x, str) else x)
+        
         # removes non-numeric card numbers
         card_df = card_df[card_df['card_number'].apply(lambda x: str(x).isdigit())]
         #converts the card number column to an integer
@@ -82,11 +86,11 @@ class DataCleaning:
         card_df['card_provider'] = card_df['card_provider'].astype('category') 
         # converts the payment date into a datetime object
         card_df['date_payment_confirmed'] = pd.to_datetime(card_df['date_payment_confirmed'], infer_datetime_format=True, errors = 'coerce')
-        # convert the card expiry date into a datetime object
-        card_df['expiry_date'] =  pd.to_datetime(card_df['expiry_date'], infer_datetime_format=True, errors = 'coerce')
+        # convert the card expiry date into a datetime object       
         card_df = card_df.reset_index(drop=True)
+        
+
         return card_df
-    
     #task5 step 4
 
     def called_clean_store_data(self, store_df):
@@ -173,7 +177,7 @@ class DataCleaning:
             Returns:
                 the same database clean from existing errors
         """
-        # replace null values
+       # replace null values
         product_df.replace('NULL', np.NaN, inplace=True)
         #replaces values with entries with correct ones
         product_df.replace({'weight':['12 x 100g', '8 x 150g', '6 x 412g', '6 x 400g']}, 
@@ -223,7 +227,7 @@ class DataCleaning:
                 A pandas dataframe
         """
 
-        order_df.drop(['first_name', 'last_name', '1'], axis = 1, inplace = True)
+        order_df.drop(['first_name', 'last_name', '1','level_0'], axis = 1, inplace = True)
         return order_df
     #  #task 8 
     def date_times_data(self,date_times_df):
@@ -277,18 +281,4 @@ print(date_times_df)
 clean_date_times_df=data_cleaning.date_times_data(date_times_df)
 print(clean_date_times_df)
                                                  
-#print(clean_product_df)
-#print(clean_store_df)
-#clean_user_df.to_csv('clean_user_after.csv')
-#clean_store_df.to_csv('clean_store_after.csv')
-#clean_product_df.to_csv('clean_product_df_data.csv')
-#clean_order_df.to_csv('clean_order_df.csv')
-#clean_date_times_df.to_json('clean_date_times.json')
-
-
-
-
-
-
-
 
