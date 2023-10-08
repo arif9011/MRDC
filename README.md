@@ -18,5 +18,5 @@
 
 # Milestone 2 - "Create the database schema."
 
-#Milestone 3 - "Querying the data"
+# Milestone 3 - "Querying the data"
 
