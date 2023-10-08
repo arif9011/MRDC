@@ -12,3 +12,11 @@
 # Project Structure
 # Milestone 1 - "Extract and clean the data from the data sources."
 
+#Extract and clean the data from each source
+
+#Transfer the data over to a postgresql environment (pgAdmin 4)
+
+# Milestone 2 - "Create the database schema."
+
+#Milestone 3 - "Querying the data"
+
