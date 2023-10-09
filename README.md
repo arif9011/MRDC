@@ -29,14 +29,14 @@ PORT = 5432
 
 # Milestone 4 - "Querying the data"
 
- # Extract and clean the data from the data sources
+ # Milestone 2 Extract and clean the data from the data sources
 
  # Set up the database
 To initialise the database, I use pgAdmin 4 and its easy functionality tying into VSCode for this project. The Database, sales_data, will serve as the blank canvas that extracted data will be imported to.
 # Initialise the 3 project Classes
 To extract, clean and upload the data we will be using 3 different Classes. data_extraction.py will contain methods that help extract from each data source (CSV files, an API and an S3 bucket) under a class DataExtractor. database_utils.py will connect and upload data to the pgAdmin database using Class DataExtractor. data_cleaning.py will contain methods to clean each data extraction before transfering the data using Class DataCleaning .
 
-# Milestone 2 Extract and clean the user data
+#  Extract and clean the user data
 The user data is stored within an AWS RDS Database in the cloud. Credentials for the host, password, user, database and port are contained within the db_creds.yaml file which are used to access and extract from AWS.
 
 The data comes from a variety of sources:
