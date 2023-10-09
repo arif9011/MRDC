@@ -81,4 +81,18 @@ class DataExtractor:
     """
 ```
 
+The sequence of actions that lead to the creation of the company central database is coded in the main.py file called main.py
 
+Finally, the cleaned data tables are updloaded to the dabaset through the upload_to_db method.
+
+The tables in the schema are:
+
+#user data: AWS database in the cloud --> dim_user_table
+
+#card details: stored in a PDF document in an AWS S3 bucket --> dim_card_details
+
+#The store data are stored as json files at several https urls and require the use of an API --> dim_store_data
+
+#The product details are stored on a S3 server --> dim_products
+
+#The orders are stored on a AWS RDS server --> orders_data
