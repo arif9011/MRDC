@@ -61,7 +61,23 @@ Three classes provide the methods needed to:
 
 #Upload the data to a Postgresql database on localhost named sales_data
 
-By reading the data into our DataCleaning class we can keep the code neat.
+''' class DatabaseConnector:
+    """
+    Utility class. Defines the tools to connect, extract and upload data into the database.
+    The methods contained will be fit to extract data from a particular data source.
+    These sources include CSV files, an API and an S3 bucket.
+    """
 
+class DataCleaning:
+    """
+    Defines methods to clean data the user data from various datasources.
+    """
+
+class DataExtractor:
+    """
+    Defines methods that help extract data from different data sources such as
+    CSV files, an API and an S3 bucket.
+    """
+    '''
 
 
