@@ -10,15 +10,23 @@
 #To clean the date from each source using pandas and postgresql.
 
 # Project Structure
-# Milestone 1 - "Extract and clean the data from the data sources."
+# Milestone 1: environment setup
+It is necessary to create a postgreSQL database named sales_data with the following characteristics:
+
+DATABASE_TYPE = 'postgresql'
+HOST = 'localhost'
+USER = 'postgres'
+DATABASE = 'sales_data'
+PORT = 5432
+# Milestone 2 - "Extract and clean the data from the data sources."
 
 #Extract and clean the data from each source
 
 #Transfer the data over to a postgresql environment (pgAdmin 4)
 
-# Milestone 2 - "Create the database schema."
+# Milestone 3 - "Create the database schema."
 
-# Milestone 3 - "Querying the data"
+# Milestone 4 - "Querying the data"
 
  # Extract and clean the data from the data sources
 
