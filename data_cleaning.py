@@ -89,7 +89,6 @@ class DataCleaning:
         # convert the card expiry date into a datetime object       
         card_df = card_df.reset_index(drop=True)
         
-
         return card_df
     #task5 step 4
 
@@ -256,29 +255,31 @@ class DataCleaning:
         
         return date_times_df
         
-    
-data_cleaning = DataCleaning()
-data_extractor=DataExtractor()
-db_connector= DatabaseConnector()
-engine = db_connector.init_db_engine()
-user_df=data_extractor.read_rds_tables(engine,'legacy_users')
-print(user_df)
-clean_user_df=data_cleaning.clean_user_data(user_df)
-card_df=data_extractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
-print(card_df)
-clean_card_df=data_cleaning.clean_card_data(card_df)
-store_df=data_extractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
-print(store_df)
-clean_store_df=data_cleaning.called_clean_store_data( store_df)
-product_df = data_extractor.extract_from_s3('s3://data-handling-public/products.csv')
-print(product_df)
-clean_product_df = data_cleaning.clean_products_data(product_df)
-order_df = data_extractor.read_rds_tables(engine, 'orders_table')
-print(order_df)
-clean_order_df = data_cleaning.clean_orders_data(order_df)
-date_times_df=data_extractor.extract_from_s3_json('https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json')
-print(date_times_df)
-clean_date_times_df=data_cleaning.date_times_data(date_times_df)
-print(clean_date_times_df)
+
+
+if __name__== "__main__":
+    data_cleaning = DataCleaning()
+    data_extractor=DataExtractor()
+    db_connector= DatabaseConnector()
+    engine = db_connector.init_db_engine()
+    user_df=data_extractor.read_rds_tables(engine,'legacy_users')
+    print(user_df)
+    clean_user_df=data_cleaning.clean_user_data(user_df)
+    card_df=data_extractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
+    print(card_df)
+    clean_card_df=data_cleaning.clean_card_data(card_df)
+    store_df=data_extractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
+    print(store_df)
+    clean_store_df=data_cleaning.called_clean_store_data( store_df)
+    product_df = data_extractor.extract_from_s3('s3://data-handling-public/products.csv')
+    print(product_df)
+    clean_product_df = data_cleaning.clean_products_data(product_df)
+    order_df = data_extractor.read_rds_tables(engine, 'orders_table')
+    print(order_df)
+    clean_order_df = data_cleaning.clean_orders_data(order_df)
+    date_times_df=data_extractor.extract_from_s3_json('https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json')
+    print(date_times_df)
+    clean_date_times_df=data_cleaning.date_times_data(date_times_df)
+    print(clean_date_times_df)
                                                  
 
