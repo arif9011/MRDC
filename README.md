@@ -13,11 +13,12 @@
 # Milestone 1: environment setup
 It is necessary to create a postgreSQL database named sales_data with the following characteristics:
 
-DATABASE_TYPE = 'postgresql'
+""" DATABASE_TYPE = 'postgresql'
 HOST = 'localhost'
 USER = 'postgres'
 DATABASE = 'sales_data'
 PORT = 5432
+""" 
 # Milestone 2 - "Extract and clean the data from the data sources."
 
 #Extract and clean the data from each source
