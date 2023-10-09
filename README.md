@@ -61,7 +61,8 @@ Three classes provide the methods needed to:
 
 #Upload the data to a Postgresql database on localhost named sales_data
 
-```class DatabaseConnector:
+```
+class DatabaseConnector:
     """
     Utility class. Defines the tools to connect, extract and upload data into the database.
     The methods contained will be fit to extract data from a particular data source.
@@ -78,6 +79,6 @@ class DataExtractor:
     Defines methods that help extract data from different data sources such as
     CSV files, an API and an S3 bucket.
     """
-    ```
+```
 
 
