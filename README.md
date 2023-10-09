@@ -39,6 +39,21 @@ To extract, clean and upload the data we will be using 3 different Classes. data
 # Extract and clean the user data
 The user data is stored within an AWS RDS Database in the cloud. Credentials for the host, password, user, database and port are contained within the db_creds.yaml file which are used to access and extract from AWS.
 
+The data comes from a variety of sources:
+
+user data: AWS database in the cloud.
+card details: stored in a PDF document in an AWS S3 bucket
+The stores data are stored as JSON files at several https urls and require the use of an API
+the product details are stored on a S3 server
+the orders are stored on a AWS RDS server
+Data has to be extracted, cleaned and stored in preparation for its storage on a PostgreSQL database.
+
+Three classes provide the methods needed to:
+
+Connect to source and download data
+Clean the data
+Upload the data to a Postgresql database on localhost named sales_data
+
 By reading the data into our DataCleaning class we can keep the code neat.
 
 
