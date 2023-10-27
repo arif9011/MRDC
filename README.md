@@ -103,7 +103,86 @@ Although cleaning involved type casting the data correctly, often this can lead 
 
 UUID's of all tables must be converted to the UUID data type, which is not a string to clarify. The example below casts the user_uuid within the orders table to the UUID data type.
 
+-- Changing the columns datatype in oders_table
+
 ``` SQL
-ALTER TABLE orders_table
-ALTER COLUMN user_uuid TYPE uuid USING user_uuid ::uuid
+select * from orders_table;
+ALTER TABLE IF EXISTS orders_table
+ALTER COLUMN date_uuid TYPE UUID USING date_uuid::uuid,
+ALTER COLUMN user_uuid TYPE UUID USING user_uuid::uuid,
+ALTER COLUMN card_number TYPE VARCHAR(50),
+ALTER COLUMN store_code TYPE VARCHAR(50),
+ALTER COLUMN product_code TYPE VARCHAR(50),
+ALTER COLUMN product_quantity TYPE SMALLINT;
+
 ```
+Card numbers, names, addresses must also be cast correctly. Varchars are used to limit the input taken from the user and provide a localised constraint on the column.
+Quantities can be kept in any form of integer however I choose to represent these as ```SMALLINT``` given that quantities of stock generally don't get too large.
+Dates must be typed correctly otherwise you cannot utilise time dependent queries as SQL will not understand the comparisons being made (date1 < date2). Fortunately during cleaning I chose to type cast columns to ```datetime64``` with pandas and this means SQL will provide the correct assumption that these are dates, subsequently providing the associated date types in pgadmin, such as ```date```
+
+Along with type casting, additional columns were added to provide more insight into the data and help with categorisation. An example of this is providing a ```weight_class``` column in the products table that will divide the data into buckets for weights between 2:40:140:140+. 
+
+### Create primary key relations
+
+Now that the tables have the appropriate data types, the primary keys to each of the tables prefixed with dim are added. Each table will serve the orders_table which will be the single source of truth for the orders. The can be done in SQL using the code below which adds a primary key constraint in ```table``` on the data ```variable```.
+
+``` sql
+ALTER TABLE dim_card_details 
+ADD PRIMARY KEY (card_number);
+
+ALTER TABLE dim_date_times 
+ADD PRIMARY KEY (date_uuid);
+
+ALTER TABLE dim_products 
+ADD PRIMARY KEY (product_code);
+
+ALTER TABLE dim_store_details 
+ADD PRIMARY KEY (store_code);
+
+ALTER TABLE dim_users 
+ADD PRIMARY KEY (user_uuid);
+
+SELECT product_code
+FROM dim_products
+WHERE product_code IS NULL;
+
+```
+
+### Create foreign key constraints
+
+The issue with linking foreign keys to primary keys is that if the data is not matched an error will be thrown. In connecting the orders table to each of the 5 primary keys, 3 worked as was the case for ```product_code``` for example which returned the constraint correctly implemented.
+``` sql
+ALTER TABLE orders_table
+ADD CONSTRAINT fk_card_number
+FOREIGN KEY (card_number)
+REFERENCES dim_card_details (card_number);
+
+ALTER TABLE orders_table
+ADD CONSTRAINT fk_date_uuid
+FOREIGN KEY (date_uuid)
+REFERENCES dim_date_times (date_uuid);
+
+DELETE FROM orders_table
+WHERE product_code NOT IN (SELECT product_code FROM dim_products);
+
+
+ALTER TABLE orders_table
+ADD CONSTRAINT fk_product_code
+FOREIGN KEY (product_code)
+REFERENCES dim_products (product_code);
+
+ALTER TABLE orders_table
+ADD CONSTRAINT fk_store_code
+FOREIGN KEY (store_code)
+REFERENCES dim_store_details (store_code);
+
+DELETE FROM orders_table
+WHERE user_uuid NOT IN (SELECT user_uuid FROM dim_users);
+
+
+ALTER TABLE orders_table
+ADD CONSTRAINT fk_user_uuid
+FOREIGN KEY (user_uuid)
+REFERENCES dim_users (user_uuid);
+
+``
