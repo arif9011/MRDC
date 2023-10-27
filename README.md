@@ -103,6 +103,7 @@ Although cleaning involved type casting the data correctly, often this can lead 
 
 UUID's of all tables must be converted to the UUID data type, which is not a string to clarify. The example below casts the user_uuid within the orders table to the UUID data type.
 
-``ALTER TABLE orders_table
+``` SQL
+ALTER TABLE orders_table
 ALTER COLUMN user_uuid TYPE uuid USING user_uuid ::uuid
-``
+```
