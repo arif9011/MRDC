@@ -185,4 +185,18 @@ ADD CONSTRAINT fk_user_uuid
 FOREIGN KEY (user_uuid)
 REFERENCES dim_users (user_uuid);
 
-``
+```
+# Milestone 4 : Querying the data
+--task1
+![image](https://github.com/arif9011/MRDC/assets/115591569/071cd92d-ea3b-4341-8788-e99586373ea9)
+
+--task2
+
+![image](https://github.com/arif9011/MRDC/assets/115591569/c2b41049-9c2e-4a03-ac17-4d493752b025)
+
+-- task3
+
+![image](https://github.com/arif9011/MRDC/assets/115591569/acaa8370-c264-4637-bcc3-473f2ecff151)
+
+
+
