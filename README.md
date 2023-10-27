@@ -95,3 +95,14 @@ The tables in the schema are:
 #The product details are stored on a S3 server --> dim_products
 
 #The orders are stored on a AWS RDS server --> orders_data
+
+# Milestone 3 : Create the database schema.
+Case the columns to the correct types
+Although cleaning involved type casting the data correctly, often this can lead to errors if it is not taken across to pgadmin correctly. The data for these tables must be correctly typed so that we can create key constraints and call the data accurately. The types are viewable in pgadmin however it is important to note that you cannot change types to just anything. Only types that are related to the current type of the data column are provided. This means that changes must be made in using SQL queries first.
+
+
+UUID's of all tables must be converted to the UUID data type, which is not a string to clarify. The example below casts the user_uuid within the orders table to the UUID data type.
+
+``ALTER TABLE orders_table
+ALTER COLUMN user_uuid TYPE uuid USING user_uuid ::uuid
+``
