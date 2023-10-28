@@ -187,35 +187,35 @@ REFERENCES dim_users (user_uuid);
 
 ```
 # Milestone 4 : Querying the data
---task1
+### Task1 How Many stores does the store have and in which countries?
 ![image](https://github.com/arif9011/MRDC/assets/115591569/071cd92d-ea3b-4341-8788-e99586373ea9)
 
---task2
+### Task2 Which Locations currently have the most stores? 
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/c2b41049-9c2e-4a03-ac17-4d493752b025)
 
--- task3
+## Task3 Which Months produce the average highest cost of sales typically? 
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/39982d87-bd7d-4213-b1fd-60ad6d6fdcf8)
 
--- task4
+## Task4 How many sales are coming from online? 
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/57013343-7c06-46eb-a31e-a64cc57ae44d)
 
--- task5
+## Task5 What Percentage of sales come through each type of store?
 ![image](https://github.com/arif9011/MRDC/assets/115591569/4ceeb707-1347-4187-95ad-b0c313335632)
 
--- task 6
+## Task 6 Which month in each year produced the highest cost of sales?
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/b1d21de5-5573-4ef9-b445-bf02a4480280)
 
--- task7
+## Task7 What is the staff headcount? 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/4b4bd33d-d6ba-44b7-8086-4f68a5d7038a)
 
--- task8 
+## Task8 Which German type store is selling the most?
 ![image](https://github.com/arif9011/MRDC/assets/115591569/7590eb1c-1eb0-4bab-bd27-1fd9b258121f)
 
--- task9 
+## Task9 How quickly is the company making sales?
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/be627f81-8fb4-44bb-90c4-ee4f63ff4821)
 
