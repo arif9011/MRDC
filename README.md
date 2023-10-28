@@ -196,7 +196,31 @@ REFERENCES dim_users (user_uuid);
 
 -- task3
 
-![image](https://github.com/arif9011/MRDC/assets/115591569/acaa8370-c264-4637-bcc3-473f2ecff151)
+![image](https://github.com/arif9011/MRDC/assets/115591569/39982d87-bd7d-4213-b1fd-60ad6d6fdcf8)
+
+-- task4
+
+![image](https://github.com/arif9011/MRDC/assets/115591569/57013343-7c06-46eb-a31e-a64cc57ae44d)
+
+-- task5
+![image](https://github.com/arif9011/MRDC/assets/115591569/4ceeb707-1347-4187-95ad-b0c313335632)
+
+-- task 6
+
+![image](https://github.com/arif9011/MRDC/assets/115591569/b1d21de5-5573-4ef9-b445-bf02a4480280)
+
+-- task7
+![image](https://github.com/arif9011/MRDC/assets/115591569/4b4bd33d-d6ba-44b7-8086-4f68a5d7038a)
+
+-- task8 
+![image](https://github.com/arif9011/MRDC/assets/115591569/7590eb1c-1eb0-4bab-bd27-1fd9b258121f)
+
+-- task9 
+
+![image](https://github.com/arif9011/MRDC/assets/115591569/be627f81-8fb4-44bb-90c4-ee4f63ff4821)
+
+
+
 
 
 
