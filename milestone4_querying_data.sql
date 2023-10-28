@@ -170,7 +170,8 @@ on
 group by year, month
 order by 
       sum(product_quantity * product_price_£) desc
-limit 10
+limit 20
+
 
 -- task7 What is our staff headcount?
 /* The operations team would like to know the overall staff numbers in each location around the world. Perform a query to determine the staff numbers in each of the countries the company sells in.
@@ -251,4 +252,8 @@ WITH cte AS(
         FROM cte
 ) SELECT year, AVG((datetimes - time_difference)) as actual_time_taken FROM cte2
 GROUP BY year
-ORDER BY actual_time_taken DESC
+ORDER BY actual_time_taken DESC;
+
+
+
+
