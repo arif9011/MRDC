@@ -142,9 +142,6 @@ ADD PRIMARY KEY (store_code);
 ALTER TABLE dim_users 
 ADD PRIMARY KEY (user_uuid);
 
-SELECT product_code
-FROM dim_products
-WHERE product_code IS NULL;
 
 ```
 
