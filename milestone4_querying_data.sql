@@ -39,9 +39,12 @@ Find out which locations have the most stores currently. The query should return
 | Rutherglen        |              10 |
 +-------------------+-----------------+
  */
-SELECT locality, COUNT(*) AS total_no_stores
-FROM dim_store_details
-GROUP BY locality
+SELECT 
+      locality, COUNT(*) AS total_no_stores
+FROM 
+      dim_store_details
+GROUP BY 
+        locality
 ORDER BY total_no_stores DESC
 LIMIT 7;
 
@@ -61,11 +64,16 @@ Query the database to find out which months typically have the most sales your q
 +-------------+-------+
  */
  
-SELECT SUM(orders_table.product_quantity * dim_products.product_price_£) as total_sales, dim_date_times.month 
-FROM dim_date_times 
-JOIN orders_table ON dim_date_times.date_uuid = orders_table.date_uuid 
-JOIN dim_products ON orders_table.product_code = dim_products.product_code 
-GROUP BY dim_date_times.month 
+SELECT 
+      SUM(orders_table.product_quantity * dim_products.product_price_£) as total_sales, dim_date_times.month 
+FROM 
+      dim_date_times 
+JOIN 
+      orders_table ON dim_date_times.date_uuid = orders_table.date_uuid 
+JOIN 
+      dim_products ON orders_table.product_code = dim_products.product_code 
+GROUP BY 
+      dim_date_times.month 
 ORDER BY total_sales DESC;
 
 --task4 How many sales are coming from online?
@@ -146,15 +154,22 @@ The query should return the following information:
 +-------------+------+-------+
 */
 select * from dim_date_times;
-select sum(product_quantity * product_price_£) as total_sales,
-year, month
-from orders_table
-join dim_date_times 
-on orders_table.date_uuid = dim_date_times.date_uuid
-join dim_products
-on orders_table.product_code = dim_products.product_code
+select 
+      sum(product_quantity * product_price_£) as total_sales,
+      year, month
+from 
+      orders_table
+join 
+      dim_date_times 
+on 
+      orders_table.date_uuid = dim_date_times.date_uuid
+join 
+     dim_products
+on 
+      orders_table.product_code = dim_products.product_code
 group by year, month
-order by sum(product_quantity * product_price_£) desc
+order by 
+      sum(product_quantity * product_price_£) desc
 limit 10
 
 -- task7 What is our staff headcount?
