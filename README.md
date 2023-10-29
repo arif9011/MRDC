@@ -183,8 +183,8 @@ FOREIGN KEY (user_uuid)
 REFERENCES dim_users (user_uuid);
 
 ```
-# Milestone 4 : Querying the data
-### Task1 How Many stores does the store have and in which countries?
+## Milestone 4 : Querying the data
+## Task1: How Many stores does the store have and in which countries?
 
 ``` sql
 SELECT 
@@ -200,7 +200,7 @@ ORDER BY
 ## Output :
 ![image](https://github.com/arif9011/MRDC/assets/115591569/071cd92d-ea3b-4341-8788-e99586373ea9)
 
-### Task2 Which Locations currently have the most stores?
+## Task2: Which Locations currently have the most stores?
 ``` sql
 SELECT 
       locality, COUNT(*) AS total_no_stores
@@ -215,7 +215,7 @@ LIMIT 7;
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/c2b41049-9c2e-4a03-ac17-4d493752b025)
 
-## Task3 Which Months produce the average highest cost of sales typically?
+## Task3: Which Months produce the average highest cost of sales typically?
 
 ``` sql
 SELECT 
@@ -234,7 +234,7 @@ ORDER BY total_sales DESC;
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/39982d87-bd7d-4213-b1fd-60ad6d6fdcf8)
 
-## Task4 How many sales are coming from online? 
+## Task4: How many sales are coming from online? 
 ``` sql
 SELECT COUNT(*) as number_of_sales, SUM(product_quantity) as product_quantity_count,
 CASE 
@@ -248,7 +248,7 @@ GROUP BY location
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/57013343-7c06-46eb-a31e-a64cc57ae44d)
 
-## Task5 What Percentage of sales come through each type of store?
+## Task5: What Percentage of sales come through each type of store?
 
 ``` sql
 SELECT
@@ -265,7 +265,7 @@ ORDER BY total_sales DESC;
 ## Output:
 ![image](https://github.com/arif9011/MRDC/assets/115591569/4ceeb707-1347-4187-95ad-b0c313335632)
 
-## Task 6 Which month in each year produced the highest cost of sales?
+## Task6: Which month in each year produced the highest cost of sales?
 ``` sql
 select * from dim_date_times;
 select 
@@ -290,7 +290,7 @@ limit 20
 ## Output:
 ![image](https://github.com/arif9011/MRDC/assets/115591569/b1d21de5-5573-4ef9-b445-bf02a4480280)
 
-## Task7 What is the staff headcount?
+## Task7: What is the staff headcount?
 ``` sql
 select 
      sum(staff_numbers) as total_staff_numbers, country_code 
@@ -304,7 +304,7 @@ order BY
 ## Output:
 ![image](https://github.com/arif9011/MRDC/assets/115591569/4b4bd33d-d6ba-44b7-8086-4f68a5d7038a)
 
-## Task8 Which German type store is selling the most?
+## Task8: Which German type store is selling the most?
 ``` sql
 select 
        sum(product_price_£ * product_quantity) as total_sales,
@@ -325,7 +325,7 @@ order BY sum(product_price_£ * product_quantity)
 ## Output:
 ![image](https://github.com/arif9011/MRDC/assets/115591569/7590eb1c-1eb0-4bab-bd27-1fd9b258121f)
 
-## Task9 How quickly is the company making sales?
+## Task9: How quickly is the company making sales?
 ``` sql
 WITH cte AS(
     SELECT TO_TIMESTAMP(CONCAT(year, '-', month, '-', day, ' ', timestamp), 'YYYY-MM-DD H:M:S') as datetimes, year FROM dim_date_times
