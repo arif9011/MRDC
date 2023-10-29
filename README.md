@@ -10,7 +10,7 @@
 #To clean the date from each source using pandas and postgresql.
 
 # Project Structure
-# Milestone 1: environment setup
+Milestone 1: environment setup
 It is necessary to create a postgreSQL database named sales_data with the following characteristics:
 
 ``` DATABASE_TYPE = 'postgresql'
@@ -19,18 +19,18 @@ USER = 'postgres'
 DATABASE = 'sales_data'
 PORT = 5432
 ``` 
-# Milestone 2: Data Extraction and cleaning data
+Milestone 2: Data Extraction and cleaning data
 
 #Extract and clean the data from each source
 
 #Transfer the data over to a postgresql environment (pgAdmin 4)
 
-# Milestone 3 : Create the database schema.
+Milestone 3 : Create the database schema.
 
-# Milestone 4 : Querying the data
+Milestone 4 : Querying the data
 
  
- # Milestone 2 Extract and clean the data from the data sources
+ # Milestone 2: Extract and clean the data from the data sources
  
 # Initialise the 3 project Classes
 To extract, clean and upload the data we will be using 3 different Classes. data_extraction.py will contain methods that help extract from each data source (CSV files, an API and an S3 bucket) under a class DataExtractor. database_utils.py will connect and upload data to the pgAdmin database using Class DataExtractor. data_cleaning.py will contain methods to clean each data extraction before transfering the data using Class DataCleaning .
