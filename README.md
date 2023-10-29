@@ -195,7 +195,7 @@ GROUP BY
     country_code
 ORDER BY
     total_no_stores DESC;
----
+```
 
 ## Output :
 ![image](https://github.com/arif9011/MRDC/assets/115591569/071cd92d-ea3b-4341-8788-e99586373ea9)
@@ -210,7 +210,7 @@ GROUP BY
         locality
 ORDER BY total_no_stores DESC
 LIMIT 7;
----
+```
 ## Output:
 
 ![image](https://github.com/arif9011/MRDC/assets/115591569/c2b41049-9c2e-4a03-ac17-4d493752b025)
