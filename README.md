@@ -1,4 +1,4 @@
-# MRDC
+# Multinational Retail Data Centralisation
 # Overview
 #This project looks to implement good practise of data extraction, cleaning and querying to subsequently assist in making business decisions for an example real world environment.
 
